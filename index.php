@@ -1,13 +1,17 @@
 <?php
-$pagina_protegida = false;
-include_once 'includes/header.php'; 
+    include_once 'includes/header.php'; 
 
-$error = isset($_REQUEST['error']) ? $_REQUEST['error'] : '';
-$msg   = isset($_REQUEST['msg'])   ? $_REQUEST['msg']   : '';
+    $email  = isset($_REQUEST['email'])  ? $_REQUEST['action'] : '';
+    $senha  = isset($_REQUEST['senha'])  ? $_REQUEST['action'] : '';
+    $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
-$error_mensage = '';
-if(!empty($error) && $error == true)
-    $error_mensage = "<div class='text-danger text-center my-3'>$msg</div>";
+    if($action == 'login')
+    {
+        require_once 'function/function_geral';
+        $ret = validation($email, $senha);
+        
+    }
+
 ?>
 <div class="container">    
     <div class="row">
@@ -15,8 +19,7 @@ if(!empty($error) && $error == true)
             <div class="card">
                 <div class="card-header">Login</div>
                 <div class="card-body">
-                    <form action="validation.php" method="POST">
-                        <input type="hidden" name="protegida" value="<?php echo isset($protegida) && $protegida ? '1' : '0'; ?>">
+                    <form action="index.php" method="POST">
                         <div class="form-group">
                             <input name="email" type="email" class="form-control" placeholder="E-mail">
                         </div>
@@ -24,7 +27,7 @@ if(!empty($error) && $error == true)
                             <input name="senha" type="password" class="form-control" placeholder="Senha">
                         </div>
                         <div id="error"></div>                       
-                        <button class="btn btn-lg btn-info btn-block" type="submit">Entrar</button>
+                        <button type="submit" name="action" value="login" class="btn btn-lg btn-info btn-block">Entrar</button>
                     </form>
                     <div class="text-center mt-2">
                         <a href="criar_conta.php" class="text-info">Crie a sua conta aqui.</a>

@@ -1,10 +1,10 @@
 <?php 
     session_set_cookie_params(['lifetime'=> 0,'httponly'=> true]);
     session_start();
-    require_once 'functions/function_session.php';
 
-    $protegida = isset($pagina_protegida) ? $pagina_protegida : true;
-    validaSessao($protegida);
+    define('ACCESS', true); 
+    
+    require_once __DIR__ . '/../connection.php';
 
     $logout_btn = isset($_SESSION['autenticado']) ? '<a href="log-out.php" class="text-white text-decoration-none">SAIR</a>' : '';
 ?>

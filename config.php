@@ -2,7 +2,7 @@
 
     require_once './functions/function_geral.php';
 
-    if (!defined('SISTEMA_VALIDO')) 
+    if (!defined('ACCESS')) 
     {
         $ret = retornoMensagem(true, 'Acesso não permitido!');
         header('Location:index.php'.$ret);

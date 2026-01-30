@@ -1,6 +1,10 @@
 <?php
 $pagina_protegida = false;
+
 include_once 'includes/header.php'; 
+include_once 'functions/function_user.php';
+
+$conn = conectDB();
 
 $email  = isset($_REQUEST['r_email'])   ? $_REQUEST['r_email']  : '';
 $senha  = isset($_REQUEST['r_senha'])   ? $_REQUEST['r_senha']  : '';
@@ -22,13 +26,12 @@ if($action == 'register')
 
     if(!empty($msg))
     {   
-        if(is_array($msg) && count($msg) > 1)
+        if(is_array($msg) && !empty($msg))
         {
-            $msg_concat = implode(' e ',$msg);
+            var_dump($msg);die();
             $msg_final = 'Os campos '.$msg_concat.' estão vazios.';
         }
-        else
-            $msg_final = 'O Campo '.$msg[0].' está vazio;';
+       
 
         $ret = retornoMensagem(true, $msg_final);
         header('Location:criar_conta.php'.$ret);
@@ -49,7 +52,7 @@ if(!empty($error) && $error == true)
             <div class="card">
                 <div class="card-header">Crie sua conta</div>
                 <div class="card-body">
-                    <form action="" method="POST">
+                    <form action="criar_conta.php" method="POST">
                         <input type="hidden" name="action" value="register">
                         <div class="form-group">
                             <input name="r_nome" type="text" class="form-control" placeholder="Nome">

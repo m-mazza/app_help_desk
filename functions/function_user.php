@@ -1,7 +1,6 @@
 <?php
 
-require_once('../connection.php');
-
+// function getUsers($conn, $email, $senha)
 function getUsers()
 {
     $users = [
