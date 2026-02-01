@@ -1,5 +1,7 @@
 <?php
+    require_once 'function_user.php';
 
+    //retorna a mensagem formatada para url.
     function retornoMensagem($state = false, $msg = '')
     {
         $url = '';
@@ -9,41 +11,36 @@
         return $url;
     }
 
-    function validation($email, $senha)
+    //valida as credencias de login do usuário
+    function validaLogin($email, $senha)
     {
+        $users_data = getUsers();
+        $saida_form = [];
+
+        if(empty($email))
+            $saida_form[] = 'Email';
+        
+        if(empty($senha))
+            $saida_form[] = 'Senha';
+
+        if(!empty($saida_form))
+        {  
+            $campo_vazio = implode(' e ', $saida_form);
+
+            if(count($saida_form) == 1)
+                $mensagem = "O campo $campo_vazio está vazio.";
+            else
+                $mensagem = "Os campos $campo_vazio estão vazios"; 
+            
+            return [
+                'status' => 'error',
+                'tag'    => 'danger',
+                'msg'    =>  $mensagem
+            ];
+        }
 
         $usuario_autenticado = false;
-        $campo_err = [];
-        
-        $users_data = getUsers();
-        
-        $email = isset($_REQUEST['email']) ? $_REQUEST['email'] : ''; 
-        $senha = isset($_REQUEST['senha']) ? $_REQUEST['senha'] : ''; 
 
-        $form_data = [
-            "email" => $email,
-            "senha" => $senha
-        ];
-        
-        foreach($form_data as $key => $data) 
-        {
-            if(empty($data))
-            {
-                if($key == 'email')
-                    $key = 'E-mail';
-                if($key == 'senha')
-                    $key = "Senha";
-
-                $mensagem = 'Campo '.$key.' está vazio.';
-
-                return [
-                    'status' => 'error',
-                    'tag'    => 'danger',
-                    'msg'    =>  $mensagem
-                ];
-            }
-        }
-        
         foreach($users_data as $user)
         {
             if($user['email'] == $email && $user['senha'] == $senha)
@@ -53,37 +50,23 @@
                 $_SESSION['autenticado'] = $usuario_autenticado;
                 break;
             }
-
-            if ($user['email'] == $email && $user['senha'] != $senha) 
-            {
-                if (!in_array('Senha', $campo_err)) 
-                    $campo_err[] = 'Senha';
-            }
-
-            if ($user['senha'] == $senha && $user['email'] != $email) 
-            {
-                if (!in_array('E-mail', $campo_err))
-                    $campo_err[] = 'E-mail';
-            }
         }
+
+        $status   = 'success';
+        $msg      = '';
+        $tag      = '';
 
         if(!$usuario_autenticado)
         {
-            if(empty($campo_err))
-                $erro_compo_txt = 'E-mail e Senha invalidos.';
-            else
-            {
-                if($campo_err[0] == 'E-mail')
-                    $str = 'inválido.';
-                else
-                    $str = 'inválida.';
-
-                $erro_compo_txt = $campo_err[0].' '.$str;
-            }
-                    
-            $error_mensage = "<div class='text-danger text-center my-3'>$erro_compo_txt</div>";
-            exit;
+            $status   = 'error';
+            $tag      = 'danger';
+            $msg      = "Usuário ou Senha inválidos";
         }
 
+        return [
+            'status' => $status,
+            'tag'    => $tag,
+            'msg'    => $msg
+        ];
     }
 ?>

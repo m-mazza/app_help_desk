@@ -1,21 +1,26 @@
 <?php
-    include_once 'includes/header.php'; 
+    $pagina_protegida = false;
+    require_once 'includes/header.php'; 
+    require_once 'functions/function_geral.php';
 
-    $email  = isset($_REQUEST['email'])  ? $_REQUEST['action'] : '';
-    $senha  = isset($_REQUEST['senha'])  ? $_REQUEST['action'] : '';
+    $email  = isset($_REQUEST['email'])  ? $_REQUEST['email'] : '';
+    $senha  = isset($_REQUEST['senha'])  ? $_REQUEST['senha'] : '';
     $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
     if($action == 'login')
     {
-        require_once 'function/function_geral';
-        $ret = validation($email, $senha);
-        
+        $ret = validaLogin($email, $senha);  
+        if($ret['status'] == 'error')
+            $error_mensage = "<p class='text-$ret[tag] text-center'>$ret[msg]</p>";
+        else if($ret['status'] == 'success')
+            header('Location:home.php');
     }
 
 ?>
+
 <div class="container">    
     <div class="row">
-        <div class="card-login">
+        <div class="card-login  m-auto">
             <div class="card">
                 <div class="card-header">Login</div>
                 <div class="card-body">

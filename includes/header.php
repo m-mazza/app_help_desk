@@ -4,7 +4,12 @@
 
     define('ACCESS', true); 
     
-    require_once __DIR__ . '/../connection.php';
+    require_once dirname(__DIR__) . '/connection.php';
+    require_once dirname(__DIR__) . '/functions/function_session.php';
+
+
+    $protegida = isset($pagina_protegida) ? $pagina_protegida : true;
+    validaSessao($protegida);
 
     $logout_btn = isset($_SESSION['autenticado']) ? '<a href="log-out.php" class="text-white text-decoration-none">SAIR</a>' : '';
 ?>
@@ -21,10 +26,10 @@
     <script src="assets/js/bootstrap4.6.1.js"></script>
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">
-            <img src="assets/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
-            App Help Desk
-        </a>
-        <div class="logout-area"></div>
-    </nav>
+
+<?php 
+    $endpoint = basename($_SERVER['PHP_SELF']);
+    if($endpoint != 'index.php')
+        include 'navbar.php';
+?>
+<div class="body-container">
