@@ -2,6 +2,9 @@
     $pagina_protegida = false;
     require_once 'includes/header.php'; 
     require_once 'functions/function_geral.php';
+  
+    $conn = conectDB();
+
 
     $email  = isset($_REQUEST['email'])  ? $_REQUEST['email'] : '';
     $senha  = isset($_REQUEST['senha'])  ? $_REQUEST['senha'] : '';
@@ -9,18 +12,34 @@
 
     if($action == 'login')
     {
-        $ret = validaLogin($email, $senha);  
-        if($ret['status'] == 'error')
-            $error_mensage = "<p class='text-$ret[tag] text-center'>$ret[msg]</p>";
-        else if($ret['status'] == 'success')
-            header('Location:home.php');
+        $campos = [];
+        empty($email) ? $campos[] = 'Email' : '';
+        empty($senha) ? $campos[] = 'Senha' : '';
+
+
+        if(!empty($saida_form))
+        {  
+            $mensagem = "Preencha os campos."; 
+            $error_mensage = "<p class='text-danger text-center'>$mensagem</p>";
+        }        
+        else
+        {
+            $ret = validaLogin($conn, $email, $senha);  
+            if($ret['status'] == 'success')
+            {
+                header('Location:home.php');
+                exit;
+            }
+            else
+                $error_mensage = "<p class='text-$ret[tag] text-center'>$ret[msg]</p>";
+        }
     }
 
 ?>
 
 <div class="container">    
     <div class="row">
-        <div class="card-login  m-auto">
+        <div class="card-login m-auto">
             <div class="card">
                 <div class="card-header">Login</div>
                 <div class="card-body">

@@ -1,49 +1,17 @@
 <?php
 
-// function getUsers($conn, $email, $senha)
-function getUsers()
+function getUsers($conn, $email)
 {
-    $users = [
-        ['email' => 'adm@teste.com.br', 'senha' => '123'],
-        ['email' => 'user@teste.com.br', 'senha' => '123']
-    ];
+    $query = sprintf("SELECT * 
+            FROM usuarios
+            WHERE email_usuario = '%s'", 
+             mysqli_escape_string($conn, $email));
 
-    return $users;
-}
-
-function createUsers($conn, $nome, $email, $senha)
-{
-    $sql = sprintf("INSERT INTO usuarios (nome, email, senha) VALUE ('%s', '%s', '%s') ", 
-    mysqli_escape_string($conn, $nome),
-            mysqli_escape_string($conn, $email), 
-            mysqli_escape_string($conn, $senha)
-    );
-    
-    $result = mysqli_query($conn, $sql);
-
-    header('Content-Type: application/json');
-    
-    $resposta = [];
-    if($result)
-    {
-        $id = mysqli_insert_id($conn);
-
-        $resposta = [
-            'status' => 'success',
-            'user_id' => $id,
-            'message' => 'Usuário cadastrado com sucesso'
-        ];
-
-        echo json_encode($resposta);
-    }
+    $result = mysqli_query($conn, $query); 
+    if($result != false)
+        return mysqli_fetch_assoc($result);
     else
-    {
-        $resposta = [
-            'status' => 'error',
-            'user_id' => NULL,
-            'message' => 'Erro ao cadastrar o usuário'.mysqli_error($conn)
-        ];
+        return "ERRO: ".mysqli_error($conn); 
+    
+}   
 
-        echo json_encode($resposta);
-    }    
-}

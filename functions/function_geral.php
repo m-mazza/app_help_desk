@@ -12,61 +12,25 @@
     }
 
     //valida as credencias de login do usuário
-    function validaLogin($email, $senha)
+    function validaLogin($conn, $email, $senha)
     {
-        $users_data = getUsers();
-        $saida_form = [];
-
-        if(empty($email))
-            $saida_form[] = 'Email';
+        //busca usuário
+        $user = getUsers($conn, $email);
         
-        if(empty($senha))
-            $saida_form[] = 'Senha';
+        //se não tem retorno
+        if(empty($user))
+            return ['status' => 'error', 'tag' => 'danger', 'msg' => 'Credenciais Inválidas.'];
+               
+        if(!password_verify($senha,$user['senha_usuario']))
+            return ['status' => 'error', 'tag' => 'danger', 'msg' => 'Credenciais Inválidas.'];
 
-        if(!empty($saida_form))
-        {  
-            $campo_vazio = implode(' e ', $saida_form);
+        session_regenerate_id(true);
+        $_SESSION['autenticado'] = true;
+        $_SESSION['id_usuario']  = $user['senha_usuario'];
+        $_SESSION['id_tipo']     = $user['senha_usuario'];
+        
+        return ['status' => 'success'];
 
-            if(count($saida_form) == 1)
-                $mensagem = "O campo $campo_vazio está vazio.";
-            else
-                $mensagem = "Os campos $campo_vazio estão vazios"; 
-            
-            return [
-                'status' => 'error',
-                'tag'    => 'danger',
-                'msg'    =>  $mensagem
-            ];
-        }
-
-        $usuario_autenticado = false;
-
-        foreach($users_data as $user)
-        {
-            if($user['email'] == $email && $user['senha'] == $senha)
-            {
-                session_regenerate_id(true);
-                $usuario_autenticado = true;
-                $_SESSION['autenticado'] = $usuario_autenticado;
-                break;
-            }
-        }
-
-        $status   = 'success';
-        $msg      = '';
-        $tag      = '';
-
-        if(!$usuario_autenticado)
-        {
-            $status   = 'error';
-            $tag      = 'danger';
-            $msg      = "Usuário ou Senha inválidos";
-        }
-
-        return [
-            'status' => $status,
-            'tag'    => $tag,
-            'msg'    => $msg
-        ];
+    
     }
 ?>

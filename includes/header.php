@@ -28,8 +28,8 @@
 <body>
 
 <?php 
-    $endpoint = basename($_SERVER['PHP_SELF']);
-    if($endpoint != 'index.php')
+    $endpoint = basename(htmlspecialchars($_SERVER['PHP_SELF']));
+    if($endpoint != 'index.php' && $endpoint != 'criar_conta.php')
         include 'navbar.php';
 ?>
 <div class="body-container">
