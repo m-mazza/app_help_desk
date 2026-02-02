@@ -14,10 +14,7 @@
     //valida as credencias de login do usuário
     function validaLogin($conn, $email, $senha)
     {
-        //busca usuário
         $user = getUsers($conn, $email);
-        
-        //se não tem retorno
         if(empty($user))
             return ['status' => 'error', 'tag' => 'danger', 'msg' => 'Credenciais Inválidas.'];
                
@@ -30,7 +27,5 @@
         $_SESSION['id_tipo']     = $user['senha_usuario'];
         
         return ['status' => 'success'];
-
-    
     }
 ?>

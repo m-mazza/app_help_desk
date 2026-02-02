@@ -1,50 +1,43 @@
 <?php
-$pagina_protegida = false;
+    $pagina_protegida = false;
 
-include_once 'includes/header.php'; 
-include_once 'functions/function_user.php';
+    include_once 'includes/header.php'; 
+    include_once 'functions/function_user.php';
 
-$conn = conectDB();
+    $conn = conectDB();
 
-$email  = isset($_REQUEST['r_email'])   ? $_REQUEST['r_email']  : '';
-$senha  = isset($_REQUEST['r_senha'])   ? $_REQUEST['r_senha']  : '';
-$senha  = isset($_REQUEST['r_nome'])    ? $_REQUEST['r_nome']   : '';
-$action = isset($_REQUEST['action'])    ? $_REQUEST['action']   : '';
+    $nome   = isset($_REQUEST['nome'])    ? $_REQUEST['nome']   : '';
+    $email  = isset($_REQUEST['email'])   ? $_REQUEST['email']  : '';
+    $senha  = isset($_REQUEST['senha'])   ? $_REQUEST['senha']  : '';
+    $action = isset($_REQUEST['action'])  ? $_REQUEST['action'] : '';
 
-if($action == 'register')
-{    
-    $msg = [];
-    if(empty(trim($nome)))
-        $msg[] = 'Nome';
-    
-    if(empty(trim($email)))
-        $msg[] = 'E-mail';
+    if($action == 'register')
+    {
+        $campos = [];
+        empty($email) ? $campos[] = 'nome' : '';
+        empty($email) ? $campos[] = 'email' : '';
+        empty($senha) ? $campos[] = 'senha' : '';
 
-    if(empty(trim($senha)))
-        $msg[] = 'Senha';
-
-
-    if(!empty($msg))
-    {   
-        if(is_array($msg) && !empty($msg))
+        if(!empty($campos))
+        {   
+            $plural = count($campos) > 1;
+            $mensagem = "Preencha o".($plural ? 's ': ' ')."campo".($plural ? 's ': ' ').implode(' e ', $campos); 
+            $error_mensage = "<p class='text-danger text-center'>$mensagem</p>";
+        }        
+        else
         {
-            var_dump($msg);die();
-            $msg_final = 'Os campos '.$msg_concat.' estão vazios.';
+            // chamada da função createUser($conn, $nome, $email, $senha);
+            $ret['status'] = 'false';
+
+            if($ret['status'] == 'success')
+            {
+                echo 'Cria o usuário e redireciona para home.pho';
+            }
+            else
+               echo 'Printa erro do banco ou cria uma mensagem amigável';
         }
-       
-
-        $ret = retornoMensagem(true, $msg_final);
-        header('Location:criar_conta.php'.$ret);
-        die();
     }
-}
 
-$error = isset($_REQUEST['error']) ? $_REQUEST['error'] : '';
-$msg   = isset($_REQUEST['msg'])   ? $_REQUEST['msg']   : '';
-
-$error_mensage = '';
-if(!empty($error) && $error == true)
-    $error_mensage = "<div class='text-danger text-center my-3'>$msg</div>";
 ?>
 <div class="container">    
     <div class="row">
@@ -58,10 +51,10 @@ if(!empty($error) && $error == true)
                             <input name="r_nome" type="text" class="form-control" placeholder="Nome">
                         </div>
                         <div class="form-group">
-                            <input name="r_email" type="email" class="form-control" placeholder="E-mail">
+                            <input name="email" type="email" class="form-control" placeholder="E-mail">
                         </div>
                         <div class="form-group">
-                            <input name="r_senha" type="password" class="form-control" placeholder="Senha">
+                            <input name="senha" type="password" class="form-control" placeholder="Senha">
                         </div>
                         <div id="error"></div>                       
                         <input type="submit" class="btn btn-lg btn-info btn-block" value="Cadastar Usuário">

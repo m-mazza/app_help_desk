@@ -32,4 +32,4 @@
     if($endpoint != 'index.php' && $endpoint != 'criar_conta.php')
         include 'navbar.php';
 ?>
-<div class="body-container">
+
