@@ -33,7 +33,7 @@
                 $error_mensage = "<p class='text-$ret[tag] text-center'>$ret[msg]</p>";
         }
     }
-
+// echo password_hash("123", PASSWORD_DEFAULT);
 ?>
 <div class="body-container">
     <div class="container">    
