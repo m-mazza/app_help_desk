@@ -19,7 +19,7 @@
         {   
             $plural = count($campos) > 1;
             $mensagem = "Preencha o".($plural ? 's ': ' ')."campo".($plural ? 's ': ' ').implode(' e ', $campos); 
-            $error_mensage = "<p class='text-danger text-center'>$mensagem</p>";
+            $error_mensagem = "<p class='text-danger text-center'>$mensagem</p>";
         }        
         else
         {
@@ -30,7 +30,7 @@
                 exit;
             }
             else
-                $error_mensage = "<p class='text-$ret[tag] text-center'>$ret[msg]</p>";
+                $error_mensagem = "<p class='text-$ret[tag] text-center'>$ret[msg]</p>";
         }
     }
 // echo password_hash("123", PASSWORD_DEFAULT);

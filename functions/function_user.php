@@ -2,9 +2,7 @@
 
 function getUsers($conn, $email)
 {
-    $query = sprintf("SELECT * 
-            FROM usuarios
-            WHERE email_usuario = '%s'", 
+    $query = sprintf("SELECT * FROM usuarios WHERE email_usuario = '%s'", 
              mysqli_escape_string($conn, $email));
 
     $result = mysqli_query($conn, $query); 
